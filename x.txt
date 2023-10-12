@@ -1,0 +1,31 @@
+
+func New() ProductServiceInterface {
+	return &productService{}
+}
+
+func (p *productService) GetProductList() []domain.Product {
+	return nil
+}
+
+func (p *productService) GetProductById(id string) *domain.Product {
+	for _, product := range productList {
+		if product.Id == id {
+			return &product
+		}
+	}
+	return nil
+}
+
+
+func NewCustomer(name string, age int) domain.Customer {
+	return domain.Customer{Name: name, Age: age}
+}
+
+func ChangeCustomerData(cus *domain.Customer, name string, age int) {
+	// cus = &domain.Customer{
+	// 	Name: name,
+	// 	Age:  age,
+	// }
+	cus.Name = name
+	cus.Age = age
+}
