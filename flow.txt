@@ -1,0 +1,6 @@
+
+
+
+
+external_request -> router -> handler -> service -> repository (internal data source)
+                                                 -> adapter (aka. client)   
