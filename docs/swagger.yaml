@@ -1,0 +1,151 @@
+definitions:
+  model.Address:
+    properties:
+      district:
+        type: string
+      province:
+        type: string
+      subdistrict:
+        type: string
+    type: object
+  model.CreateCustomerAddressRequest:
+    properties:
+      address:
+        $ref: '#/definitions/model.Address'
+      created_by:
+        type: string
+      first_name:
+        type: string
+      last_name:
+        type: string
+      mobile_no:
+        type: string
+      the1_member_id:
+        type: string
+      the1_mobile_no:
+        type: string
+      updated_by:
+        type: string
+    type: object
+  model.CreateCustomerRequest:
+    properties:
+      created_by:
+        type: string
+      first_name:
+        type: string
+      last_name:
+        type: string
+      mobile_no:
+        type: string
+      the1_member_id:
+        type: string
+      the1_mobile_no:
+        type: string
+      updated_by:
+        type: string
+    type: object
+  model.CreateCustomerResponse:
+    properties:
+      id:
+        type: integer
+    type: object
+  model.CustomerRow:
+    properties:
+      created_at:
+        type: string
+      created_by:
+        type: string
+      first_name:
+        type: string
+      id:
+        type: integer
+      is_active:
+        type: boolean
+      last_name:
+        type: string
+      mobile_no:
+        type: string
+      the1_member_id:
+        type: string
+      the1_mobile_no:
+        type: string
+      updated_at:
+        type: string
+      updated_by:
+        type: string
+    type: object
+info:
+  contact: {}
+paths:
+  /v1:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: Create customer
+        in: body
+        name: create-customer-request
+        schema:
+          $ref: '#/definitions/model.CreateCustomerRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.CreateCustomerResponse'
+      security:
+      - ApiKeyAuth: []
+      summary: create customer
+      tags:
+      - customer
+  /v1/{id}:
+    get:
+      consumes:
+      - application/json
+      parameters:
+      - description: id
+        in: path
+        name: id
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.CustomerRow'
+      security:
+      - ApiKeyAuth: []
+      summary: get customer by id
+      tags:
+      - customer
+  /v1/customer-address:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: Create customer
+        in: body
+        name: create-customer-request
+        schema:
+          $ref: '#/definitions/model.CreateCustomerAddressRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.CreateCustomerResponse'
+      security:
+      - ApiKeyAuth: []
+      summary: create customer and address
+      tags:
+      - customer
+securityDefinitions:
+  ApiKeyAuth:
+    description: API key
+    in: header
+    name: X-API-KEY
+    type: apiKey
+swagger: "2.0"

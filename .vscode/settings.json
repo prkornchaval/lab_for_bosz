@@ -1,0 +1,7 @@
+{
+    "go.testFlags": [
+        "-coverpkg=./...",
+        "--tags=test"
+    ],
+    "cloudcode.duetAI.inlineSuggestions.enableAuto": false
+}
