@@ -15,3 +15,8 @@ type CustomerService interface {
 	CreateCustomerAddress(ctx context.Context, in domain.CreateCustomerAddress) (*int, error)
 	CreateCustomerAddressTransactional(ctx context.Context, in domain.CreateCustomerAddress, f fn.CreateCustomerAddressFn) (*int, error)
 }
+
+type CustService interface {
+	CreateCustomerAddressTransaction(ctx context.Context, in domain.CreateCustomerAddress) (*int, error)
+	CreateCustomerAddressFn(ctx context.Context, in domain.CreateCustomerAddress) (*int, error)
+}

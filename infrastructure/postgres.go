@@ -2,10 +2,12 @@ package infrastructure
 
 import (
 	"context"
+	"database/sql"
 	"labForBosz/property"
 	"log"
 
 	"github.com/jackc/pgx/v5/pgxpool"
+	_ "github.com/jackc/pgx/v5/stdlib"
 )
 
 func NewPostgresDB(ctx context.Context) *pgxpool.Pool {
@@ -24,6 +26,15 @@ func NewPostgresDB(ctx context.Context) *pgxpool.Pool {
 	}
 
 	return db
+}
+
+func NewSqlDB() *sql.DB {
+	connString := property.Get().DB.PostgresConnectionUri
+	pgxPool, err := sql.Open("pgx", connString)
+	if err != nil {
+		log.Panicf("Failed to initialize Postgres client: %+v", err)
+	}
+	return pgxPool
 }
 
 /*

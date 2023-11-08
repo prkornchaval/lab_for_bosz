@@ -13,3 +13,9 @@ type CustomerRepository interface {
 	UpdateCustomer(ctx context.Context, in domain.Customer) error
 	CreateCustomerAddressTransactional(ctx context.Context, in domain.CreateCustomerAddress, f fn.CreateCustomerAddressFn) (*int, error)
 }
+
+type CustRepository interface {
+	CreateCustomerTx(ctx context.Context, in domain.Customer) (*int, error)
+	CreateAddressTx(ctx context.Context, in domain.Address) error
+	CreateCustomerAddressTransactional(ctx context.Context, in domain.CreateCustomerAddress, f fn.CreateCustomerAddressFn) (*int, error)
+}

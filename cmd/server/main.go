@@ -2,17 +2,15 @@ package main
 
 import (
 	"context"
+	"fmt"
+	"time"
 
-	setupServer "github.com/centraldigital/cfw-core-lib/pkg/backoffice/setup-server"
 	"github.com/centraldigital/cfw-core-lib/pkg/configuration/logger"
-	"github.com/gin-gonic/gin"
 
 	"labForBosz/infrastructure"
-	"labForBosz/internal/core/service"
-	"labForBosz/internal/handler"
-	customerrepo "labForBosz/internal/repository/customer-repository"
-	"labForBosz/internal/router"
-	"labForBosz/pkg/dbctx"
+	cusservice "labForBosz/internal/core/cus-service"
+	"labForBosz/internal/core/domain"
+	cusrepo "labForBosz/internal/repository/cus-repo"
 	"labForBosz/property"
 )
 
@@ -26,32 +24,65 @@ func main() {
 	defer log.Sync()
 
 	// init infrastructure
-	db, err := dbctx.OpenPgxPool(ctx, property.Get().DB.PostgresConnectionUri)
+	db := infrastructure.NewSqlDB()
+
+	cusRepo := cusrepo.New(db)
+	cusSvc := cusservice.New(cusRepo)
+
+	ti := time.Now()
+	id, err := cusSvc.CreateCustomerAddressTransaction(ctx, domain.CreateCustomerAddress{
+		Customer: domain.Customer{
+			FirstName:    "test_tx_name",
+			LastName:     "test_tx_last-name",
+			MobileNo:     "test_tx_mobile-no",
+			The1MemberId: nil,
+			The1MobileNo: nil,
+			IsActive:     true,
+			CreatedAt:    ti,
+			CreatedBy:    "me",
+			UpdatedAt:    ti,
+			UpdatedBy:    "me",
+		},
+		Address: domain.Address{
+			Subdistrict: "test_sub_district",
+			District:    "test_district",
+			Province:    "test_province",
+		},
+	})
 	if err != nil {
-		log.Fatal(err)
+		fmt.Printf("\nid: %v\n\n", id)
+		fmt.Printf("\nerr: %v\n\n", err)
+	} else {
+		fmt.Printf("\nid: %v\n\n", *id)
+		fmt.Printf("\nerr: %v\n\n", err)
 	}
-	scanapi := infrastructure.NewScanApi()
 
-	// init repository
-	customerRepo := customerrepo.New(db, scanapi)
-	_ = customerRepo
+	// db, err := dbctx.OpenPgxPool(ctx, property.Get().DB.PostgresConnectionUri)
+	// if err != nil {
+	// 	log.Fatal(err)
+	// }
+	// scanapi := infrastructure.NewScanApi()
 
-	// init service
-	cusService := service.New(customerRepo)
+	// // init repository
+	// customerRepo := customerrepo.New(db, scanapi)
+	// _ = customerRepo
 
-	// init handler
-	hdl := handler.New(cusService)
+	// // init service
+	// cusService := service.New(customerRepo)
 
-	// create new gin engine
-	// engine := setupServer.InitServer()
-	engine := gin.New()
+	// // init handler
+	// hdl := handler.New(cusService)
 
-	// middleware
-	// engine.Use(dbctx.GinMiddleware(db))
+	// // create new gin engine
+	// // engine := setupServer.InitServer()
+	// engine := gin.New()
 
-	// setup router
-	router.Setup(engine, hdl)
+	// // middleware
+	// // engine.Use(dbctx.GinMiddleware(db))
 
-	setupServer.StartServer(engine, log, "localhost", "8080")
+	// // setup router
+	// router.Setup(engine, hdl)
+
+	// setupServer.StartServer(engine, log, "localhost", "8080")
 
 }
