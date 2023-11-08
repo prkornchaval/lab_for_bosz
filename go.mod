@@ -6,6 +6,7 @@ require github.com/jackc/pgx/v5 v5.4.3
 
 require (
 	github.com/centraldigital/cfw-core-lib v0.0.0-20231017121809-ec214ae9e7bd
+	github.com/exaring/otelpgx v0.5.2
 	github.com/georgysavva/scany/v2 v2.0.0
 	github.com/gin-gonic/gin v1.9.1
 	github.com/kelseyhightower/envconfig v1.4.0

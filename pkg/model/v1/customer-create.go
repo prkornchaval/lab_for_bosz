@@ -11,14 +11,15 @@ type CreateCustomerRequest struct {
 }
 
 type CreateCustomerAddressRequest struct {
-	FirstName    string  `json:"first_name"`
-	LastName     string  `json:"last_name"`
-	MobileNo     string  `json:"mobile_no"`
-	The1MemberId *string `json:"the1_member_id"`
-	The1MobileNo *string `json:"the1_mobile_no"`
-	Address      Address `json:"address"`
-	CreatedBy    string  `json:"created_by"`
-	UpdatedBy    string  `json:"updated_by"`
+	FirstName           string  `json:"first_name"`
+	LastName            string  `json:"last_name"`
+	MobileNo            string  `json:"mobile_no"`
+	The1MemberId        *string `json:"the1_member_id"`
+	The1MobileNo        *string `json:"the1_mobile_no"`
+	Address             Address `json:"address"`
+	CreatedBy           string  `json:"created_by"`
+	UpdatedBy           string  `json:"updated_by"`
+	CreatedAddressError bool    `json:"created_address_error"`
 }
 
 type Address struct {

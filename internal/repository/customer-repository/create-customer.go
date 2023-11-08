@@ -3,7 +3,6 @@ package customerrepo
 import (
 	"context"
 	"labForBosz/internal/core/domain"
-	"labForBosz/pkg/dbctx"
 )
 
 func (r *repository) CreateCustomer(ctx context.Context, in domain.Customer) (*int, error) {
@@ -28,7 +27,7 @@ func (r *repository) CreateCustomer(ctx context.Context, in domain.Customer) (*i
 	}
 
 	var id int
-	if err := dbctx.QueryRow(ctx, query, args...).Scan(&id); err != nil {
+	if err := r.db.QueryRow(ctx, query, args...).Scan(&id); err != nil {
 		return nil, err
 	}
 	return &id, nil

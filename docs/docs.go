@@ -147,6 +147,9 @@ const docTemplate = `{
                 "address": {
                     "$ref": "#/definitions/model.Address"
                 },
+                "created_address_error": {
+                    "type": "boolean"
+                },
                 "created_by": {
                     "type": "string"
                 },

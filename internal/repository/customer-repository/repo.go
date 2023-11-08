@@ -10,18 +10,20 @@ import (
 )
 
 type repository struct {
+	db      *dbctx.DB
 	scanapi *pgxscan.API
 }
 
-func New(scanapi *pgxscan.API) port.CustomerRepository {
+func New(db *dbctx.DB, scanapi *pgxscan.API) port.CustomerRepository {
 	return &repository{
+		db:      db,
 		scanapi: scanapi,
 	}
 }
 
 func (r *repository) GetCustomer(ctx context.Context, id *int) ([]domain.Customer, error) {
 	queryString := `select * from customer where id = $1`
-	rows, err := dbctx.Query(ctx, queryString, id)
+	rows, err := r.db.Query(ctx, queryString, id)
 	if err != nil {
 		return nil, err
 	}
@@ -34,7 +36,7 @@ func (r *repository) GetCustomer(ctx context.Context, id *int) ([]domain.Custome
 	return resp, nil
 }
 
-func (*repository) UpdateCustomer(ctx context.Context, in domain.Customer) error {
+func (r *repository) UpdateCustomer(ctx context.Context, in domain.Customer) error {
 	query := `update customer set
 			firstname = $2,
 			lastname = $3,
@@ -54,6 +56,6 @@ func (*repository) UpdateCustomer(ctx context.Context, in domain.Customer) error
 		in.UpdatedAt,
 		in.UpdatedBy,
 	}
-	_, err := dbctx.Exec(ctx, query, args...)
+	_, err := r.db.Exec(ctx, query, args...)
 	return err
 }
