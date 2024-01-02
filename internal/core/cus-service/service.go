@@ -8,11 +8,23 @@ import (
 )
 
 type service struct {
+	util serviceUtils
 	repo port.CustRepository
 }
 
-func New(repo port.CustRepository) port.CustService {
+type serviceUtilImpl struct{}
+
+type serviceUtils interface {
+	createCustomers() error
+}
+
+func NewServiceUtil() serviceUtilImpl {
+	return serviceUtilImpl{}
+}
+
+func New(repo port.CustRepository, util serviceUtils) port.CustService {
 	return &service{
+		util: util,
 		repo: repo,
 	}
 }
@@ -22,6 +34,11 @@ func (s *service) CreateCustomerAddressTransaction(ctx context.Context, in domai
 }
 
 func (s *service) CreateCustomerAddressFn(ctx context.Context, in domain.CreateCustomerAddress) (*int, error) {
+	err := s.util.createCustomers()
+	if err != nil {
+		return nil, err
+	}
+
 	id, err := s.repo.CreateCustomerTx(ctx, in.Customer)
 	if err != nil {
 		return nil, err

@@ -27,7 +27,7 @@ func main() {
 	db := infrastructure.NewSqlDB()
 
 	cusRepo := cusrepo.New(db)
-	cusSvc := cusservice.New(cusRepo)
+	cusSvc := cusservice.New(cusRepo, cusservice.NewServiceUtil())
 
 	ti := time.Now()
 	id, err := cusSvc.CreateCustomerAddressTransaction(ctx, domain.CreateCustomerAddress{

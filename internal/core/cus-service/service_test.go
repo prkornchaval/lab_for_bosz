@@ -1,9 +1,8 @@
-package cusservice_test
+package cusservice
 
 import (
 	"context"
 	"errors"
-	cusservice "labForBosz/internal/core/cus-service"
 	"labForBosz/internal/core/domain"
 	"labForBosz/internal/core/port"
 	"labForBosz/internal/core/port/mocks"
@@ -17,13 +16,16 @@ import (
 type testingModule struct {
 	repo *mocks.CustRepository
 	svc  port.CustService
+	util *mockServiceUtils
 }
 
 func newTestingModule(t *testing.T) testingModule {
 	repo := mocks.NewCustRepository(t)
+	util := newMockServiceUtils(t)
 	return testingModule{
 		repo: repo,
-		svc:  cusservice.New(repo),
+		util: util,
+		svc:  New(repo, util),
 	}
 }
 
@@ -50,6 +52,17 @@ func TestCreateCustomerAddressFn(t *testing.T) {
 			},
 		}
 	)
+	t.Run("00_util_fails", func(t *testing.T) {
+		var (
+			ctx = context.Background()
+			tm  = newTestingModule(t)
+		)
+
+		tm.util.On("createCustomers").Return(errors.New("util failed"))
+		_, err := tm.svc.CreateCustomerAddressFn(ctx, input)
+
+		assert.Error(t, err)
+	})
 	t.Run("01_create_customer_error", func(t *testing.T) {
 		var (
 			ctx   = context.Background()
@@ -78,6 +91,7 @@ func TestCreateCustomerAddressFn(t *testing.T) {
 			_            = dbResponseId
 		)
 
+		tm.util.On("createCustomers").Return(nil)
 		tm.repo.On("CreateCustomerTx", ctx, input.Customer).Return(nil, errors.New("test"))
 
 		_, err := tm.svc.CreateCustomerAddressFn(ctx, input)
@@ -91,6 +105,7 @@ func TestCreateCustomerAddressFn(t *testing.T) {
 			tm  = newTestingModule(t)
 		)
 
+		tm.util.On("createCustomers").Return(nil)
 		tm.repo.On("CreateCustomerTx", ctx, input.Customer).Return(nil, nil)
 
 		_, err := tm.svc.CreateCustomerAddressFn(ctx, input)
@@ -105,6 +120,7 @@ func TestCreateCustomerAddressFn(t *testing.T) {
 			id  = 20
 		)
 
+		tm.util.On("createCustomers").Return(nil)
 		tm.repo.On("CreateCustomerTx", ctx, input.Customer).Return(&id, nil)
 		input.Address.Owner = id
 		tm.repo.On("CreateAddressTx", ctx, input.Address).Return(errors.New("create address error"))
@@ -120,6 +136,7 @@ func TestCreateCustomerAddressFn(t *testing.T) {
 			id  = 20
 		)
 
+		tm.util.On("createCustomers").Return(nil)
 		tm.repo.On("CreateCustomerTx", ctx, input.Customer).Return(&id, nil)
 		input.Address.Owner = id
 		tm.repo.On("CreateAddressTx", ctx, input.Address).Return(nil)
