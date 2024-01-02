@@ -12,14 +12,15 @@ type service struct {
 	repo port.CustRepository
 }
 
-type serviceUtilImpl struct{}
+// type serviceUtilImpl struct{}
 
 type serviceUtils interface {
 	createCustomers() error
 }
 
-func NewServiceUtil() serviceUtilImpl {
-	return serviceUtilImpl{}
+func NewServiceUtil() serviceUtils {
+	// return serviceUtilImpl{}
+	return &service{}
 }
 
 func New(repo port.CustRepository, util serviceUtils) port.CustService {
@@ -55,4 +56,8 @@ func (s *service) CreateCustomerAddressFn(ctx context.Context, in domain.CreateC
 		return nil, err
 	}
 	return id, nil
+}
+
+func (s *service) createCustomers() error {
+	return nil
 }
