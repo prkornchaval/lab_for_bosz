@@ -58,7 +58,7 @@ func TestCreateCustomerAddressFn(t *testing.T) {
 			tm  = newTestingModule(t)
 		)
 
-		tm.util.On("createCustomers").Return(errors.New("util failed"))
+		tm.util.On("createCustomers", tm.svc).Return(errors.New("util failed"))
 		_, err := tm.svc.CreateCustomerAddressFn(ctx, input)
 
 		assert.Error(t, err)

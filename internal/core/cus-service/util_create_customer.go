@@ -1,5 +1,5 @@
 package cusservice
 
-func (serviceUtilImpl) createCustomers() error {
+func (serviceUtilImpl) createCustomers(s *service) error {
 	return nil
 }

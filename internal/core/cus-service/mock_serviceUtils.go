@@ -9,13 +9,13 @@ type mockServiceUtils struct {
 	mock.Mock
 }
 
-// createCustomers provides a mock function with given fields:
-func (_m *mockServiceUtils) createCustomers() error {
-	ret := _m.Called()
+// createCustomers provides a mock function with given fields: s
+func (_m *mockServiceUtils) createCustomers(s *service) error {
+	ret := _m.Called(s)
 
 	var r0 error
-	if rf, ok := ret.Get(0).(func() error); ok {
-		r0 = rf()
+	if rf, ok := ret.Get(0).(func(*service) error); ok {
+		r0 = rf(s)
 	} else {
 		r0 = ret.Error(0)
 	}

@@ -15,7 +15,7 @@ type service struct {
 type serviceUtilImpl struct{}
 
 type serviceUtils interface {
-	createCustomers() error
+	createCustomers(s *service) error
 }
 
 func NewServiceUtil() serviceUtilImpl {
@@ -34,7 +34,7 @@ func (s *service) CreateCustomerAddressTransaction(ctx context.Context, in domai
 }
 
 func (s *service) CreateCustomerAddressFn(ctx context.Context, in domain.CreateCustomerAddress) (*int, error) {
-	err := s.util.createCustomers()
+	err := s.util.createCustomers(s)
 	if err != nil {
 		return nil, err
 	}
